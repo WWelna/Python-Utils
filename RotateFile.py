@@ -45,6 +45,8 @@ class RotateFile:
     def _datecheck(self) -> None:
         if self.dt < datetime.datetime.utcnow() - datetime.timedelta(hours=self.hours):
             self.file.close()
+            subprocess.Popen(['xz', '-9e', self.location])
+            
             self.dt = datetime.datetime.utcnow()
             self.file = open(self._do_template(self.dt), mode=self.mode, encoding=self.encoding)
 
@@ -65,3 +67,4 @@ class RotateFile:
     def __enter__(self): return self
     def __exit__(self, exc_type, exc_value, traceback):
         self.file.close()
+        subprocess.Popen(['xz', '-9e', self.location])
